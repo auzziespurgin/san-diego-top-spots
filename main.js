@@ -4,8 +4,12 @@ const userLocation = (function() {
 });
 
 // Get data from the data.json file, then either populate the page or display an error
-$.getJSON("data.json", pageLoad(data))
-.fail((jqXHR,text,error) => console.log("Error retrieving JSON: ",text,error));
+$.getJSON("data.json")
+.done(pageLoad) // Call pageLoad() to populate the page
+.fail((jqXHR,text,error) => {
+  console.log("Error retrieving JSON: ",text,error);
+  alert("Error loading page.");
+});
 
 // Calls the appropriate functions to load the page based on data from $.getJSON
 function pageLoad(data) {
@@ -21,6 +25,7 @@ function sortData(data) {
 // iterate arr, call calcDistance -> add distance key/value to each obj
 // let arr2 = [];
 // iterate arr, pop min distance to arr2; return
+return data;
 };
 
 // Calculates distance by car from user's location to given long/lat; called by sortData()
@@ -36,12 +41,12 @@ function populateGraph(obj) {
   row.insertCell(0).innerHTML = obj.name;
   row.insertCell(1).innerHTML = obj.description;
   row.insertCell(2).innerHTML = mapButton(obj.location); // Button linked to GMaps location
-  row.insertCell(3).innerHTML = mapButton(obj); // Button linked to route directions
+  row.insertCell(3).innerHTML = routeButton(obj); // Button linked to route directions
 };
 
 // Creates a button linked to GMaps for given long/lat coords; called by populateGraph()
-function mapButton(long,lat) {
-
+function mapButton([long,lat]) {
+  return `<button onClick="javascript:window.open('https://www.google.com/maps?q=`+long+`,`+lat+`', '_blank');">Map</button>`
 };
 
 // Creates a button linked to GMaps route from user location, named by distance; called by populateGraph()
